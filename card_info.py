@@ -12,6 +12,7 @@ action_cards = {
     "Smithy": 10,
     "Chapel": 10,
     "Witch": 10,
+    "Woodcutter": 10,
 }
 
 vps = {
@@ -32,6 +33,7 @@ costs = {
     "Smithy": 4,
     "Chapel": 2,
     "Witch": 5,
+    "Woodcutter": 3,
 }
 
 values = {

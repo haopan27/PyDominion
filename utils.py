@@ -48,27 +48,3 @@ def get_desired_item(available_coins):
 
 def get_opp_player(cur_player):
     return 1 if cur_player == 2 else 2
-
-
-def resolve_action(cards_to_draw, cards_in_hand, cards_discarded, cur_player, opp_player,
-                   desired_action, piles_on_board, victory_points):
-    if desired_action == "Smithy":
-        draw_cards(cards_to_draw, cards_in_hand, cards_discarded, cur_player, 3, True)  # append cards to current hand
-    elif desired_action == "Chapel":
-        num_trash = 4
-        while num_trash > 0:
-            card_to_trash = input("Trash a card from your hand: {} x ".format(", ".join(cards_in_hand[cur_player])))
-            if card_to_trash not in cards_in_hand[cur_player]:
-                break
-
-            if card_to_trash in ci.vps:
-                victory_points[cur_player - 1] -= ci.vps[card_to_trash]
-
-            cards_in_hand[cur_player].remove(card_to_trash)
-            num_trash -= 1
-    elif desired_action == "Witch":
-        draw_cards(cards_to_draw, cards_in_hand, cards_discarded, cur_player, 2, True)
-        if piles_on_board["Curse"] > 0:
-            cards_discarded[opp_player] += ["Curse"]
-            victory_points[opp_player - 1] -= 1
-            piles_on_board["Curse"] -= 1
