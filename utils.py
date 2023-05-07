@@ -1,5 +1,5 @@
 import random
-import card_info as ci
+# import card_info as ci
 
 
 def print_colored(text_to_print, desired_color="red", new_line=True):
