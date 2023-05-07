@@ -6,39 +6,37 @@ import utils
 game_end = False
 human_resigned = False
 victory_points = [3, 3]  # each player starts with 3 estates
-adjusted_victory_points = victory_points
-gardens_owned = [0, 0]
-cards_owned = [10, 10]
 turns = 1
 cur_player = 1
 piles_on_board = ci.basic_cards
-piles_on_board.update(random.sample(ci.action_cards.items(), 2))  # add action cards
-# piles_on_board.update(ci.special_cards)  # append items in special_cards
+# piles_on_board.update(ci.action_cards)  # add action cards
+# piles_on_board.update(random.sample(ci.action_cards.items(), len(ci.action_cards) // 2))  # randomly add action cards
+piles_on_board.update(random.sample(ci.action_cards.items(), 2))
 
-starting_hand = {
+cards_owned = {
     1: [],
     2: []
 }
 for _ in range(7):
-    starting_hand[1] += ["Copper"]
-    starting_hand[2] += ["Copper"]
+    cards_owned[1] += ["Copper"]
+    cards_owned[2] += ["Copper"]
 for _ in range(3):
-    starting_hand[1] += ['Estate']
-    starting_hand[2] += ['Estate']
+    cards_owned[1] += ['Estate']
+    cards_owned[2] += ['Estate']
 
-random.shuffle(starting_hand[1])
-random.shuffle(starting_hand[2])
+random.shuffle(cards_owned[1])
+random.shuffle(cards_owned[2])
 cards_in_hand = {
-    1: starting_hand[1][:5],
-    2: starting_hand[2][:5]
+    1: cards_owned[1][:5],
+    2: cards_owned[2][:5]
 }
 cards_discarded = {
     1: [],
     2: []
 }
 cards_to_draw = {
-    1: starting_hand[1][5:],
-    2: starting_hand[2][5:]
+    1: cards_owned[1][5:],
+    2: cards_owned[2][5:]
 }
 
 human_starts = True if random.randint(1, 100) < 50 else False
@@ -55,6 +53,10 @@ while not game_end:
     cur_player_name = "Human player" if cur_player == 1 and human_starts or cur_player == 2 and not human_starts \
         else "Computer player"
 
+    # utils.print_colored("{} has {} cards".format(cur_player_name, len(cards_to_draw[cur_player]
+    #                                                                   + cards_in_hand[cur_player]
+    #                                                                   + cards_discarded[cur_player])), "purple")
+
     # Action phase
     num_actions = 0
     num_buys = 1  # certain action cards modify num_buys
@@ -69,7 +71,7 @@ while not game_end:
             available_actions += [c]
 
     opp_player = utils.get_opp_player(cur_player)
-    while num_actions > 0 and len(available_actions):
+    while num_actions > 0:
         desired_action = "None"
         if cur_player_name == "Human player":
             print("Action phase || your hand: {}".format(", ".join(cards_in_hand[cur_player])))
@@ -96,7 +98,10 @@ while not game_end:
             utils.print_colored("{} played {}".format(cur_player_name, desired_action))
 
             # resolve action
-            if desired_action == "Chapel":
+            if desired_action == "Smithy":
+                utils.draw_cards(cards_to_draw, cards_in_hand, cards_discarded, cur_player, 3, True)
+                # ^^draw and append cards to current hand
+            elif desired_action == "Chapel":
                 num_trash = 4
                 while num_trash > 0:
                     card_to_trash = input(
@@ -107,104 +112,17 @@ while not game_end:
                     if card_to_trash in ci.vps:
                         victory_points[cur_player - 1] -= ci.vps[card_to_trash]
 
-                    if card_to_trash == "Gardens":
-                        gardens_owned[cur_player - 1] -= 1
-
-                    cards_owned[cur_player - 1] -= 1
                     cards_in_hand[cur_player].remove(card_to_trash)
                     num_trash -= 1
-            elif desired_action == "Woodcutter":
-                num_buys += 1
-                available_coins += 2
-            elif desired_action == "Village":
-                num_actions += 2
-                utils.draw_cards(cards_to_draw, cards_in_hand, cards_discarded, cur_player, 1, True)
-            elif desired_action == "Smithy":
-                utils.draw_cards(cards_to_draw, cards_in_hand, cards_discarded, cur_player, 3, True)
-                # ^^draw and append cards to current hand
-            elif desired_action == "Moneylender":
-                if "Copper" in cards_in_hand[cur_player]:
-                    trash_a_copper = input("Trash a copper from your hand?")
-                    if trash_a_copper == "Yes":
-                        cards_in_hand[cur_player].remove("Copper")
-                        available_coins += 3
             elif desired_action == "Witch":
                 utils.draw_cards(cards_to_draw, cards_in_hand, cards_discarded, cur_player, 2, True)
                 if piles_on_board["Curse"] > 0:
                     cards_discarded[opp_player] += ["Curse"]
                     victory_points[opp_player - 1] -= 1
                     piles_on_board["Curse"] -= 1
-            elif desired_action == "Laboratory":
-                utils.draw_cards(cards_to_draw, cards_in_hand, cards_discarded, cur_player, 2, True)
-                num_actions += 1
-            elif desired_action == "Market":
-                utils.draw_cards(cards_to_draw, cards_in_hand, cards_discarded, cur_player, 1, True)
-                num_actions += 1
-                num_buys += 1
-                available_coins += 1
-            elif desired_action == "Festival":
-                num_actions += 2
+            elif desired_action == "Woodcutter":
                 num_buys += 1
                 available_coins += 2
-            elif desired_action == "Sentry":
-                num_actions += 1
-                utils.draw_cards(cards_to_draw, cards_in_hand, cards_discarded, cur_player, 1, True)
-
-                cards_to_look = []
-                num_cards_to_draw = len(cards_to_draw[cur_player])
-                if num_cards_to_draw < 2:
-                    cards_to_look += cards_to_draw[cur_player]
-                    random.shuffle(cards_discarded[cur_player])
-                    cards_to_draw[cur_player] = cards_discarded[cur_player]
-                    cards_discarded[cur_player] = []
-                    cards_to_look += cards_to_draw[cur_player][:2 - num_cards_to_draw]
-                else:
-                    cards_to_look += cards_to_draw[cur_player][:2]
-
-                cards_to_draw_rem_copy = cards_to_draw[cur_player][2:]
-
-                num_trash = 2
-                while num_trash > 0:
-                    card_to_trash = input(
-                        "Trash a card from top 2 of your deck: {} x ".format(", ".join(cards_to_look)))
-
-                    if card_to_trash not in cards_to_look:
-                        break
-
-                    if card_to_trash in ci.vps:
-                        victory_points[cur_player - 1] -= ci.vps[card_to_trash]
-
-                    if card_to_trash == "Gardens":
-                        gardens_owned[cur_player - 1] -= 1
-
-                    cards_owned[cur_player - 1] -= 1
-                    cards_to_look.remove(card_to_trash)
-                    num_trash -= 1
-
-                num_discard = len(cards_to_look)
-                while num_discard > 0:
-                    card_to_discard = input("Discard a card: {} x ".format(", ".join(cards_to_look)))
-
-                    if num_discard == 2 and card_to_discard == "Both":
-                        cards_discarded[cur_player] += cards_to_look
-                        cards_to_look = []
-                        num_discard -= 2
-                        break
-
-                    if card_to_discard not in cards_to_look:
-                        break
-
-                    cards_to_look.remove(card_to_discard)
-                    cards_discarded[cur_player] += [card_to_discard]
-                    num_discard -= 1
-
-                if num_discard == 2:
-                    do_swap = input("Would you like to swap the two cards {}(top, bottom)?".format(cards_to_look))
-                    if do_swap:
-                        cards_to_look = cards_to_look[::-1]
-
-                # Put back cards onto the top of the deck
-                cards_to_draw[cur_player] = cards_to_look + cards_to_draw_rem_copy
 
     if human_resigned:
         break
@@ -223,7 +141,6 @@ while not game_end:
             for k, v in piles_on_board.items():
                 utils.print_colored(k + "(" + str(v) + ") | ", "cyan", False)
             print()
-
             desired_item = input(
                 "You have {} coins and {} buy(s), "
                 "please input the next item you wish to buy: ".format(available_coins, num_buys))
@@ -238,25 +155,17 @@ while not game_end:
                 and available_coins >= ci.costs[desired_item]:
             # ^^make sure piles_on_board is a subset of ci.costs
             utils.print_colored(cur_player_name + " bought " + desired_item)
-
             available_coins -= ci.costs[desired_item]
             num_buys -= 1
             cards_discarded[cur_player] += [desired_item]
             if desired_item in ci.vps:
                 victory_points[cur_player - 1] += ci.vps[desired_item]
-
-            if desired_item == "Gardens":
-                gardens_owned[cur_player - 1] += 1
-
-            cards_owned[cur_player - 1] += 1
             piles_on_board[desired_item] -= 1
         else:
             break
 
-    adjusted_victory_points = [victory_points[i] + cards_owned[i] // 10 * gardens_owned[i] for i in range(2)]
-
     print("After turn {}: {} (starting) has \033[92m\033[4m{}\033[0m VPs || {} has \033[92m\033[4m{}\033[0m VPs"
-          .format(turns, player1_name, adjusted_victory_points[0], player2_name, adjusted_victory_points[1]))
+          .format(turns, player1_name, victory_points[0], player2_name, victory_points[1]))
 
     # check if game ends
     if piles_on_board["Province"] == 0:
@@ -289,10 +198,10 @@ if human_resigned:
 else:
     winner = 0  # assumes tie
 
-    max_vp = max(adjusted_victory_points)
-    min_vp = min(adjusted_victory_points)
+    max_vp = max(victory_points)
+    min_vp = min(victory_points)
     if max_vp > min_vp:
-        winner = adjusted_victory_points.index(max(adjusted_victory_points)) + 1
+        winner = victory_points.index(max(victory_points)) + 1
     elif max_vp == min_vp:
         if turns % 2 == 1 and cur_player == 1:
             winner = 2
