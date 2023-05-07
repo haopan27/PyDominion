@@ -9,10 +9,20 @@ basic_cards = {
 }
 
 action_cards = {
+    # "Chapel": 10,
+    # "Woodcutter": 10,
+    # "Village": 10,
     "Smithy": 10,
-    "Chapel": 10,
-    "Witch": 10,
-    "Woodcutter": 10,
+    "Moneylender": 10,
+    # "Witch": 10,
+    # "Sentry": 10,
+    # "Laboratory": 10,
+    # "Market": 10,
+    # "Festival": 10,
+}
+
+special_cards = {
+    "Gardens": 10,
 }
 
 vps = {
@@ -30,10 +40,17 @@ costs = {
     "Copper": 0,
     "Silver": 3,
     "Gold": 6,
-    "Smithy": 4,
     "Chapel": 2,
-    "Witch": 5,
     "Woodcutter": 3,
+    "Village": 3,
+    "Smithy": 4,
+    "Gardens": 4,
+    "Moneylender": 4,
+    "Sentry": 5,
+    "Witch": 5,
+    "Laboratory": 5,
+    "Market": 5,
+    "Festival": 5,
 }
 
 values = {
