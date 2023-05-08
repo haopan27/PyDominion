@@ -9,16 +9,18 @@ basic_cards = {
 }
 
 action_cards = {
+    "Cellar": 10,
     # "Chapel": 10,
     # "Woodcutter": 10,
     # "Village": 10,
-    "Smithy": 10,
-    "Moneylender": 10,
+    # "Smithy": 10,
+    # "Moneylender": 10,
     # "Witch": 10,
     # "Sentry": 10,
     # "Laboratory": 10,
     # "Market": 10,
     # "Festival": 10,
+    "Council Room": 10,
 }
 
 special_cards = {
@@ -40,6 +42,7 @@ costs = {
     "Copper": 0,
     "Silver": 3,
     "Gold": 6,
+    "Cellar": 2,
     "Chapel": 2,
     "Woodcutter": 3,
     "Village": 3,
@@ -51,6 +54,7 @@ costs = {
     "Laboratory": 5,
     "Market": 5,
     "Festival": 5,
+    "Council Room": 5,
 }
 
 values = {

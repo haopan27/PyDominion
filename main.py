@@ -113,6 +113,24 @@ while not game_end:
                     cards_owned[cur_player - 1] -= 1
                     cards_in_hand[cur_player].remove(card_to_trash)
                     num_trash -= 1
+            elif desired_action == "Cellar":
+                num_actions += 1
+                cards_to_discard = []
+                while len(cards_in_hand[cur_player]):
+                    card_to_discard = input(
+                        "Discard cards from your hand to draw that many: {} x ".format(
+                            ", ".join(cards_in_hand[cur_player])))
+
+                    if card_to_discard not in cards_in_hand[cur_player]:
+                        break
+                    cards_to_discard += [card_to_discard]
+                    cards_in_hand[cur_player].remove(card_to_discard)
+
+                num_cards_discarded = len(cards_to_discard)
+                if num_cards_discarded:
+                    utils.draw_cards(cards_to_draw, cards_in_hand, cards_discarded, cur_player,
+                                     num_cards_discarded, True)
+                    cards_discarded[cur_player] += cards_to_discard
             elif desired_action == "Woodcutter":
                 num_buys += 1
                 available_coins += 2
@@ -205,6 +223,10 @@ while not game_end:
 
                 # Put back cards onto the top of the deck
                 cards_to_draw[cur_player] = cards_to_look + cards_to_draw_rem_copy
+            elif desired_action == "Council Room":
+                utils.draw_cards(cards_to_draw, cards_in_hand, cards_discarded, cur_player, 4, True)
+                num_buys += 1
+                utils.draw_cards(cards_to_draw, cards_in_hand, cards_discarded, opp_player, 1, True)
 
     if human_resigned:
         break
