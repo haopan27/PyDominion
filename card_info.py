@@ -10,20 +10,20 @@ basic_cards = {
 
 action_cards = {
     "Cellar": 10,
-    # "Chapel": 10,
-    # "Woodcutter": 10,
-    # "Village": 10,
-    # "Smithy": 10,
-    # "Moneylender": 10,
-    # "Witch": 10,
-    # "Sentry": 10,
-    # "Laboratory": 10,
-    # "Market": 10,
-    # "Festival": 10,
+    "Chapel": 10,
+    "Woodcutter": 10,
+    "Village": 10,
+    "Smithy": 10,
+    "Moneylender": 10,
+    "Witch": 10,
+    "Sentry": 10,
+    "Laboratory": 10,
+    "Market": 10,
+    "Festival": 10,
     "Council Room": 10,
 }
 
-special_cards = {
+special_cards = {  # may not be action cards
     "Gardens": 10,
 }
 

@@ -12,7 +12,9 @@ cards_owned = [10, 10]
 turns = 1
 cur_player = 1
 piles_on_board = ci.basic_cards
-piles_on_board.update(random.sample(ci.action_cards.items(), 2))  # add action cards
+# piles_on_board.update(random.sample(ci.action_cards.items(), 2))  # add action cards
+piles_on_board.update({k: v for k, v in ci.action_cards.items() if k in ["Smithy", "Sentry"]})
+# ^^add specific cards
 # piles_on_board.update(ci.special_cards)  # append items in special_cards
 
 starting_hand = {
